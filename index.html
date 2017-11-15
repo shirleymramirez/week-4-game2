@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Star Wars RPG Game</title>
+	<!-- We link our html to the Bootstrap CDN -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- Linking CSS Reset -->
+	<link rel="stylesheet" type="text/css" href="./assets/css/reset.css">
+	<!-- Linking CSS -->
+	<link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+</head>
+<body>
+	<!-- Header  -->
+	<header>
+		<img src="./assets/images/star-wars-image.jpg">
+	</header>
+
+	<!-- Character Section  -->
+	<div class="container" id="main-game-section">
+		<div class="container col-lg-12" id="characters-section">
+     		<div class="container section-title">Select Your Character</div>
+    	</div>
+
+		<!-- Selected Character Section -->
+	    <div class="container col-lg-4" id="selected-character-section">
+	    	<div class="section-title container"></div>
+	    	<div id="selected-character"></div>
+	    </div>
+
+		<!-- Fight Section -->
+	    <div class="section-title container col-sm-4">Fight Section
+	    	<div id="fight-section">
+	      		<button class="btn" id="attack-button">Attack</button>
+	      		<div class="jumbotron" id="gameMessage"></div>
+	    	</div>   
+	    </div>	
+
+		<!-- Character Defender Section -->
+	    <div id="action">
+	    	<div class="character-section">
+	        	<div class="container section-title col-lg-3">
+	        		<div id="defender"></div>
+	        	</div>	
+	      	</div>
+	    </div>
+
+	    <!-- Attack Section     -->
+	    <div class="container" id="available-to-attack-section">
+	    	<div class="section-title"></div>
+	    </div>
+	</div>
+
+	<!-- Linking JQuery -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+	<!-- Linking JS -->
+	<script type="text/javascript" src="./assets/javascript/game.js"></script>
+</body>
+</html>
