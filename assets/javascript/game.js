@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
 	// Audio Clips
 	var audio = new Audio('assets/audio/imperial_march.mp3');
 	var force = new Audio('assets/audio/force.mp3');
@@ -11,12 +10,12 @@ $(document).ready(function() {
 
 	// Array of Players in an Object
 	var characters = {
-		
+
 		'princessLeia': {
 			name:'princessLeia',
 			healthPoints: 120,
 			attackPower: 10,	
-			imageUrl: "../images/leia.png",
+			imageUrl: "assets/images/leia.png",
 			counterAttackPower: 18
 		},
 
@@ -24,15 +23,15 @@ $(document).ready(function() {
 			name:'finn',
 			healthPoints: 100,
 			attackPower: 8,	
-			imageUrl: "../images/finn.jpg",
+			imageUrl: "assets/images/finn.jpg",
 			counterAttackPower: 15
 		},
 
-		'darth ': {
+		'darth': {
 			name:'darth',
 			healthPoints: 150,
 			attackPower: 15,	
-			imageUrl: "../images/darthvader.jpg",
+			imageUrl: "assets/images/darthvader.jpg",
 			counterAttackPower: 20
 		},
 
@@ -40,66 +39,122 @@ $(document).ready(function() {
 			name:'yoda',
 			healthPoints: 160,
 			attackPower: 20,	
-			imageUrl: "../images/yoda.jpg",
+			imageUrl: "assets/images/yoda.jpg",
 			counterAttackPower: 22
 		}
 	}
 
+	//Variable Declaration
+	var currentSelectedChar;
+	var opponents = {};
+	var turnCounter = 1;
+	var currentOpponent;
 
-	//Variable declaration for access at character object
-	var charDiv = $("<div class='character' data-name='" + characters.name + "'>" + "alt=characters.name");
-    var charName = $("<div class='character-name'>").text(characters.name);
-    var charImage = $("<div class='character-image'>").attr("src", characters.imageUrl);
-    var charhealth =$("<div class='character-health'>").text(characters.healthPoints);
-    charDiv.append(charName).append(charImage).append(charhealth);
-    $(renderArea).append(charDiv);
-
-	var renderOne = starWarsStart(character, renderArea, makeChar);
-
-});
-
-//Variable Initialization
-	var characterSelect;
-	var currentDefender;
-	var combatants = [];
-	var counterWin;
-	var killCount;
-	var attackResult;
-	var indexOfSelectedChar;
-
-
-//Create function for main charater and the defender
-function starWarsStart(character, renderArea, makeChar) {
-
-	if(makeChar=='enemy'){
-		$(charDiv).addClass('enemy');
-	} else if(makeChar=='defender') {
-		currentDefender = character;
-		$(charDiv).addClass('target-enemy');
+	//Function to render a character
+	function renderCharacter(character, renderArea, makeChar ) {
+		var charDiv = $("<div class='" + makeChar + "' data-name='" + character.name + "'>");
+		var charName = $("<div class='character-name'>").text(character.name);
+    	var charImage = $("<img alt='image' class='character-image'>").attr("src", character.imageUrl);
+    	var charHealth = $("<div class='character-health'>").text(character.healthPoints);
+    	charDiv.append(charName).append(charImage).append(charHealth);
+    	$(renderArea).append(charDiv);  	
 	}
 
 	// Create function to render game message to DOM
+	function renderMessage(message) {
+		var gameMesageSet = $("#gameMessage");
+	    var newMessage = $("<div>").text(message);
+	    console.log(newMessage);
+	    gameMesageSet.append(newMessage);
+
+	    if (message == 'clearMessage') {
+	      gameMesageSet.text('');
+	    }
+	  };
 	
-  
-	// Function for rendering charaters
+	 renderAllCharacters( characters, '#characters-section', 'character');
 
-	// Render Player's Character
+	//Function to render all characters
+	function renderAllCharacters( characters,renderArea, makeChar) {
+		for( var key in characters ){	
+			renderCharacter(characters[key], renderArea, makeChar); 
+		}					
+	};
 
-	// Render's Combatants
+	//Function to render players character
+	$(document).on("click", '.character', function(event) {
+		var name = $(this).data('name');
 
-	// Render one Enemy to Defender Area 
+		//Check if no player has been selected
+		if(!currentSelectedChar ) {
+			currentSelectedChar = characters[name];
+			for( var key in characters ) {
 
-	// Render Defender
+				//Select Opponents
+				if( key != name) {
+					opponents[key] = characters[key];
+				}
+			}
+			//Hide other characters 
+			$('#characters-section').hide();
 
-	// Re-render Defender when Attacked
+			//this is to render a selected character
+			renderCharacter(currentSelectedChar, '#selected-character', 'myplayer');
 
-	// Re-render Player Character when Attacked
 
-	// Render Defeated Enemy
+			//this is to render all characters for user to choose fight against with
+			 $('#available-to-attack-section').prepend("Choose Your Next Opponent");   
+			renderAllCharacters(opponents, '#available-to-attack-section', 'opponents');
+		}
+	});
 
-	// This is to Render All Characters for User to Choose their computer
+	//Render 1 Opponent to Defend their Area
+	$(document).on("click", '.opponents', function(event) {
+	
+		//Select an opponent to fight
+		var name = ($(this).data('name'));
 
-	// Create functions to enable actions between objects. 
+		//if defender area is empty
+		 renderCharacter(opponents[name], '#defender', 'myopponents');
 
-	// Restarts/Reset the game - renders a reset button
-}
+		 currentOpponent = opponents[name];
+
+		//Hide other characters 
+		$("#available-to-attack-section").fadeOut("slow"); 
+	});
+
+	//Function to create battle 
+	$("#attack-button").on("click", function() { 
+		console.log('#attack-button');
+    
+		var attackMessage = "You attacked " + currentOpponent.name + " for " + (currentSelectedChar.attackPower * turnCounter) + " damage.";
+		blaster.play();
+		//renderMessage("clearMessage");
+		console.log(attackMessage);
+	
+		//combat
+	    currentOpponent.healthPoints = currentOpponent.healthPoints - (currentSelectedChar.attackPower * turnCounter);
+	    console.log(currentOpponent.healthPoints);	    
+
+	    //win condition
+     	 if (currentOpponent.healthPoints > 0) {
+
+	        //enemy not dead keep playing
+	        renderCharacter(currentOpponent, 'playerDamage', '');
+
+	        //player state change
+	        var counterAttackMessage = currentOpponent.name + " attacked you back for " + currentOpponent.counterAttackPower + " damage.";
+	        console.log(counterAttackMessage);
+	
+	        renderMessage(attackMessage);
+	        renderMessage(counterAttackMessage);
+
+	        currentSelectedChar.healthPoints = currentSelectedChar.healthPoints - currentOpponent.counterAttackPower;
+       		console.log(currentSelectedChar.healthPoints);
+
+    	} else {
+
+    	}
+    });
+
+});

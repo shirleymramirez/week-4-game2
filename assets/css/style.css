@@ -1,6 +1,7 @@
 body{
 	background-image: url("../images/starwars-background.jpg");
 	color: white;	
+	font-family: 'Merriweather', serif;
 }
 
 /* Header Layout */
@@ -11,11 +12,116 @@ header{
 img {
 	height: 150px;
 	width: 500px;
-	margin-top: 20px;
+	margin: 20px 0;
 	border-radius: 25px;
 }
 
-/*  Game Message */
-#gameMessage {
-	border-radius: 25px;
+/*---------------------*/
+/*  Fight Section      */
+/*---------------------*/
+
+#fight-section {
+	margin-top: 25px;
 }
+
+.section-title {
+	margin: 25px;	
+}
+
+/*  Game Message */
+#attack-button{
+	display: block;
+}
+
+#gameMessage {
+	margin: 20px;
+	background-color: white;
+	height: 100px;
+	width: 200px;
+	border-radius: 25px;
+	text-align: center;
+  	font-size: 10px;
+  	color: black;
+}
+
+#turn-counter {
+  font-size: 150%;
+}
+
+.keys {
+	transition: all 0.07s;
+}
+
+.playing {
+	transition: scale(1.1);
+}
+
+/*---------------------*/
+/* Character rendering */
+/*---------------------*/
+
+.character-image {
+	height: 200px;
+	width: 150px;
+}
+
+#characters-section {
+	display: flex;
+}
+
+.character {
+	border-color: lightblue;
+	border-width: 5px;
+	border-style: solid;
+	margin: 10px;
+	cursor: pointer;
+}
+
+.character-name {
+  text-align: center;
+  text-transform: capitalize;
+  line-height: 30px;
+  font-family: 'Itim', cursive;
+  font-size: 20px;
+}
+
+.character-health {
+  text-align: center;
+}
+
+.myplayer {
+	border-color: lightblue;
+	border-width: 5px;
+	border-style: solid;
+	display: inline-block;
+
+}
+
+/*-----------------------------*/
+/* Available to Attack Section */
+/*-----------------------------*/
+
+#available-to-attack-section {
+	display: flex;
+	text-align: center;	
+}
+
+/*---------------------*/
+/* Opponents rendering */
+/*---------------------*/
+.opponents {
+	border-color: aquamarine;
+	border-width: 5px;
+	border-style: solid;
+	margin: 10px;
+	cursor: pointer;
+}
+
+.myopponents {
+	border-color: orange;
+	border-width: 5px;
+	border-style: solid;
+	display: inline-block;
+}
+
+
