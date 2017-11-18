@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	
 	// Audio Clips
 	var audio = new Audio('assets/audio/imperial_march.mp3');
 	var force = new Audio('assets/audio/force.mp3');
@@ -49,6 +50,7 @@ $(document).ready(function() {
 	var opponents = {};
 	var turnCounter = 1;
 	var currentOpponent;
+	var killCount = 0;
 
 	//Function to render a character
 	function renderCharacter(character, renderArea, makeChar ) {
@@ -60,11 +62,10 @@ $(document).ready(function() {
     	$(renderArea).append(charDiv);  	
 	}
 
-	// Create function to render game message to DOM
+	//Create function to render game message to DOM
 	function renderMessage(message) {
 		var gameMesageSet = $("#gameMessage");
 	    var newMessage = $("<div>").text(message);
-	    console.log(newMessage);
 	    gameMesageSet.append(newMessage);
 
 	    if (message == 'clearMessage') {
@@ -78,7 +79,7 @@ $(document).ready(function() {
 	function renderAllCharacters( characters,renderArea, makeChar) {
 		for( var key in characters ){	
 			renderCharacter(characters[key], renderArea, makeChar); 
-		}					
+		}	    				
 	};
 
 	//Function to render players character
@@ -87,6 +88,7 @@ $(document).ready(function() {
 
 		//Check if no player has been selected
 		if(!currentSelectedChar ) {
+
 			currentSelectedChar = characters[name];
 			for( var key in characters ) {
 
@@ -98,63 +100,83 @@ $(document).ready(function() {
 			//Hide other characters 
 			$('#characters-section').hide();
 
-			//this is to render a selected character
+			//This is to render a selected character
 			renderCharacter(currentSelectedChar, '#selected-character', 'myplayer');
 
-
-			//this is to render all characters for user to choose fight against with
+			//This is to render all characters for user to choose fight against with
 			 $('#available-to-attack-section').prepend("Choose Your Next Opponent");   
 			renderAllCharacters(opponents, '#available-to-attack-section', 'opponents');
 		}
+		
 	});
 
-	//Render 1 Opponent to Defend their Area
+	//Funtion to render 1 opponent to defend their area
 	$(document).on("click", '.opponents', function(event) {
 	
 		//Select an opponent to fight
 		var name = ($(this).data('name'));
-
-		//if defender area is empty
-		 renderCharacter(opponents[name], '#defender', 'myopponents');
-
-		 currentOpponent = opponents[name];
+		renderCharacter(opponents[name], '#defender', 'myopponents');
+		currentOpponent = opponents[name];
 
 		//Hide other characters 
-		$("#available-to-attack-section").fadeOut("slow"); 
+		$("#available-to-attack-section").hide(); 
 	});
 
 	//Function to create battle 
 	$("#attack-button").on("click", function() { 
-		console.log('#attack-button');
     
 		var attackMessage = "You attacked " + currentOpponent.name + " for " + (currentSelectedChar.attackPower * turnCounter) + " damage.";
 		blaster.play();
-		//renderMessage("clearMessage");
-		console.log(attackMessage);
+		renderMessage("clearMessage");
 	
-		//combat
+		//Opponents health points status
 	    currentOpponent.healthPoints = currentOpponent.healthPoints - (currentSelectedChar.attackPower * turnCounter);
-	    console.log(currentOpponent.healthPoints);	    
+	    
+	    //Update opponents health points
+	    $('div.myopponents > div.character-health').text(currentOpponent.healthPoints);
 
-	    //win condition
+	    //Win-Lose condition
      	 if (currentOpponent.healthPoints > 0) {
 
-	        //enemy not dead keep playing
-	        renderCharacter(currentOpponent, 'playerDamage', '');
-
-	        //player state change
+	        //Player state change
 	        var counterAttackMessage = currentOpponent.name + " attacked you back for " + currentOpponent.counterAttackPower + " damage.";
-	        console.log(counterAttackMessage);
-	
+	    
 	        renderMessage(attackMessage);
 	        renderMessage(counterAttackMessage);
 
+	        //Update current player health points
 	        currentSelectedChar.healthPoints = currentSelectedChar.healthPoints - currentOpponent.counterAttackPower;
-       		console.log(currentSelectedChar.healthPoints);
-
-    	} else {
-
-    	}
+	        $('div.myplayer > div.character-health').text(currentSelectedChar.healthPoints);
+			
+       		 if (currentSelectedChar.healthPoints <= 0) {
+	        	renderMessage("clearMessage");
+	          	restartGame("You have been defeated...GAME OVER!!!");
+	          	force.play();
+	          	$("#attack-button").unbind("click");
+        	}
+        }
+        else if(currentSelectedChar.healthPoints > 0 && currentOpponent.healthPoints <= 0 ) {
+    		renderMessage("clearMessage");
+          	restartGame("You Won!!!! GAME OVER!!!");
+          	jediKnow.play();
+   
+          	 // The following line will play the imperial march:
+	          setTimeout(function() {
+	          	audio.play();
+	          }, 2000);
+	          turnCounter++;
+        }
     });
+
+	//Function to restart the game
+    function restartGame(inputEndGame) {
+    	//When 'Restart' button is clicked, reload the page.
+    	var restart = $('<button class="btn">Restart</button>').click(function() {
+      		location.reload();
+    	});
+    	var gameState = $("<div>").text(inputEndGame);
+	    $("#gameMessage").append(gameState);
+	    $("#gameMessage").append(restart);
+    }
 
 });

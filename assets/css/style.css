@@ -1,5 +1,6 @@
 body{
 	background-image: url("../images/starwars-background.jpg");
+	background-repeat: initial;
 	color: white;	
 	font-family: 'Merriweather', serif;
 }
@@ -19,7 +20,6 @@ img {
 /*---------------------*/
 /*  Fight Section      */
 /*---------------------*/
-
 #fight-section {
 	margin-top: 25px;
 }
@@ -28,7 +28,10 @@ img {
 	margin: 25px;	
 }
 
-/*  Game Message */
+/*---------------------*/
+/*  Game Message       */
+/*---------------------*/
+
 #attack-button{
 	display: block;
 }
@@ -38,22 +41,9 @@ img {
 	background-color: white;
 	height: 100px;
 	width: 200px;
-	border-radius: 25px;
-	text-align: center;
-  	font-size: 10px;
+  	font-size: 18px;
   	color: black;
-}
-
-#turn-counter {
-  font-size: 150%;
-}
-
-.keys {
-	transition: all 0.07s;
-}
-
-.playing {
-	transition: scale(1.1);
+  	padding: 10px;
 }
 
 /*---------------------*/
@@ -70,11 +60,15 @@ img {
 }
 
 .character {
+	margin: 10px;
+	cursor: pointer;
+}
+
+.character,
+.myplayer {
 	border-color: lightblue;
 	border-width: 5px;
 	border-style: solid;
-	margin: 10px;
-	cursor: pointer;
 }
 
 .character-name {
@@ -90,9 +84,6 @@ img {
 }
 
 .myplayer {
-	border-color: lightblue;
-	border-width: 5px;
-	border-style: solid;
 	display: inline-block;
 
 }
@@ -109,6 +100,7 @@ img {
 /*---------------------*/
 /* Opponents rendering */
 /*---------------------*/
+
 .opponents {
 	border-color: aquamarine;
 	border-width: 5px;
